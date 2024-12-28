@@ -1,7 +1,8 @@
-//! Atomic options.
+//! Simple atomic options.
+//! 
+//! See [`AtomicOption`] for more information.
 #![doc()]
 
-use log::info;
 use crate::compat::SimpleAtomic;
 use crate::default::*;
 use crate::prelude::*;
@@ -11,7 +12,24 @@ use crate::prelude::*;
 /// This is a lock-free version of `Mutex<Option<T>>`, where `T` is an atomic type.
 ///
 /// Note that if you use [`Ordering::Relaxed`], the `is_some` flag may be set to `true`
-/// before the value is set, so this ordering should be avoided.
+/// before the value is set, so this ordering should be avoided. With orderings stronger
+/// than `Relaxed`, the value is guaranteed to be set before the `is_some` flag.
+/// 
+/// # Examples
+/// ```
+/// # use atomiq::default::AtomicI32;
+/// # use atomiq::option::AtomicOption;
+/// # use atomiq::Ordering;
+/// 
+/// let option: AtomicOption<AtomicI32> = AtomicOption::none();
+/// 
+/// assert!(option.is_none(Ordering::Acquire));
+/// 
+/// option.store_some(42, Ordering::Release);
+/// 
+/// assert!(option.is_some(Ordering::Acquire));
+/// assert_eq!(option.load(Ordering::Acquire), Some(42));
+/// ```
 #[derive(Debug)]
 pub struct AtomicOption<T> {
     is_some: AtomicBool,
@@ -28,6 +46,7 @@ impl<T: SimpleAtomic> From<Option<T::Value>> for AtomicOption<T> {
 }
 
 impl<T: SimpleAtomic> AtomicOption<T> {
+    /// Creates a new atomic option with no value.
     pub fn none() -> Self {
         Self {
             is_some: AtomicBool::new(false),
@@ -35,6 +54,7 @@ impl<T: SimpleAtomic> AtomicOption<T> {
         }
     }
 
+    /// Creates a new atomic option with a value.
     pub fn some(value: T::Value) -> Self {
         Self {
             is_some: AtomicBool::new(true),
@@ -42,14 +62,17 @@ impl<T: SimpleAtomic> AtomicOption<T> {
         }
     }
 
+    /// Returns whether the option is `Some`.
     pub fn is_some(&self, ordering: Ordering) -> bool {
         self.is_some.load(ordering)
     }
 
+    /// Returns whether the option is `None`.
     pub fn is_none(&self, ordering: Ordering) -> bool {
         !self.is_some(ordering)
     }
 
+    /// Loads the value with the given ordering.
     pub fn load(&self, ordering: Ordering) -> Option<T::Value> {
         if self.is_some(ordering) {
             Some(self.value.load(ordering))
@@ -58,6 +81,7 @@ impl<T: SimpleAtomic> AtomicOption<T> {
         }
     }
 
+    /// Stores a value with the given ordering.
     pub fn store(&self, value: Option<T::Value>, ordering: Ordering) {
         match value {
             Some(value) => {
@@ -72,14 +96,20 @@ impl<T: SimpleAtomic> AtomicOption<T> {
         }
     }
 
+    /// Stores `None` with the given ordering.
     pub fn store_none(&self, ordering: Ordering) {
         self.store(None, ordering);
     }
 
+    /// Stores `Some` with the given ordering.
     pub fn store_some(&self, value: T::Value, ordering: Ordering) {
         self.store(Some(value), ordering);
     }
 
+    /// Unwraps the value with the given ordering.
+    /// 
+    /// # Panics
+    /// Panics if the option is `None`.
     pub fn unwrap(&self, ordering: Ordering) -> T::Value {
         self.load(ordering).unwrap()
     }

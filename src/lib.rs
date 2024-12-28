@@ -1,17 +1,25 @@
 //! Convenient tool for atomics in Rust.
 //!
-//! # Features
-//!
-//! - Common atomic traits and types.
-//! - Standard library/core implementation (default `compat-core` create feature)
-//! - [Loom][loom] implementation for testing (`compat-loom` crate feature)
-//! - Avoiding generics by providing default implementation (either `default-core` (default) or
-//! `default-loom` crate features)
-//! - Atomic option type (requires default implementation)
-//!
-//! [loom]: https://docs.rs/loom
+//! # Crate features
+//! | Feature | Description |     |
+//! | ------- | ----------- | --- |
+//! | `compat_core` | Compatibility with `core::sync::atomic` | DEFAULT |
+//! | `compat_loom` | Compatibility with `loom::sync::atomic` |         |
+//! | `default_core`[^1] | Default implementation with `core::sync::atomic` | DEFAULT |
+//! | `default_loom`[^1] | Default implementation with `loom::sync::atomic` |         |
+//! 
+//! [^1]: `default_<impl>` features are mutually exclusive.
+//! 
+//! # Usage
+//! Usually, you would want to use the atomiq crate with the default implementation:
+//! ```
+//! use atomiq::default::AtomicBool;
+//! 
+//! let atomic = AtomicBool::new(false);
+//! ```
 #![no_std]
 #![allow(unused)]
+#![warn(missing_docs)]
 extern crate alloc;
 
 pub mod compat;

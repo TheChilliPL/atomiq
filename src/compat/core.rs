@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 use crate::compat::{bool_atomic_impl, int_atomic_impl};
 use crate::prelude::*;
 

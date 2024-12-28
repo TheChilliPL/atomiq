@@ -3,7 +3,7 @@ name = "atomiq"
 description = "Convenient tool for atomics in Rust."
 categories = ["concurrency", "rust-patterns"]
 keywords = ["atomics", "concurrency", "lock-free", "threading", "no-std"]
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Chilli <chilli@thechilli.dev>"]
 license = "MPL-2.0"
 edition = "2021"
@@ -18,13 +18,10 @@ default_core = ["compat_core"]
 default_loom = ["compat_loom"]
 
 [dependencies]
-log = "0.4.22"
 loom = { version = "0.7.2", optional = true }
 
 [dev-dependencies]
+log = "0.4.22"
 env_logger = "0.11.6"
 pretty_assertions = "1.4.1"
 test-log = "0.2.16"
-
-[badges]
-maintenance = { status = "experimental" }
