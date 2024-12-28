@@ -1,10 +1,14 @@
 [package]
 name = "atomiq"
+description = "Convenient tool for atomics in Rust."
+categories = ["concurrency", "rust-patterns"]
+keywords = ["atomics", "concurrency", "lock-free", "threading", "no-std"]
 version = "0.1.0"
 authors = ["Chilli <chilli@thechilli.dev>"]
+license = "MPL-2.0"
 edition = "2021"
 repository = "https://github.com/TheChilliPL/atomiq"
-license = "MPL-2"
+publish = ["crates-io"]
 
 [features]
 default = ["compat_core", "default_core"]
