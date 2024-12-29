@@ -4,6 +4,8 @@
 
 Convenient tool for atomics in Rust.
 
+Inspired by the `atomig` crate, but with a more flexible design.
+
 ## Features
 
 - Common atomic traits and types.

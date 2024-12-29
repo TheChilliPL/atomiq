@@ -3,8 +3,6 @@
 //! See [`AtomicOption`] for more information.
 #![doc()]
 
-use crate::compat::SimpleAtomic;
-use crate::default::*;
 use crate::prelude::*;
 
 /// An atomic option.
@@ -17,27 +15,29 @@ use crate::prelude::*;
 /// 
 /// # Examples
 /// ```
-/// # use atomiq::default::AtomicI32;
-/// # use atomiq::option::AtomicOption;
-/// # use atomiq::Ordering;
-/// 
-/// let option: AtomicOption<AtomicI32> = AtomicOption::none();
-/// 
+/// use atomiq::prelude::*;
+/// use atomiq::option::AtomicOption;
+/// # use atomiq::try_init_model;
+///
+/// # try_init_model(|| {
+/// let option: AtomicOption<i32> = AtomicOption::none();
+///
 /// assert!(option.is_none(Ordering::Acquire));
-/// 
+///
 /// option.store_some(42, Ordering::Release);
-/// 
+///
 /// assert!(option.is_some(Ordering::Acquire));
 /// assert_eq!(option.load(Ordering::Acquire), Some(42));
+/// # });
 /// ```
 #[derive(Debug)]
-pub struct AtomicOption<T> {
-    is_some: AtomicBool,
-    value: T,
+pub struct AtomicOption<T: Atomizable> {
+    is_some: Atomic<bool>,
+    value: Atomic<T>,
 }
 
-impl<T: SimpleAtomic> From<Option<T::Value>> for AtomicOption<T> {
-    fn from(option: Option<T::Value>) -> Self {
+impl<T: Atomizable> From<Option<T>> for AtomicOption<T> {
+    fn from(option: Option<T>) -> Self {
         match option {
             Some(value) => Self::some(value),
             None => Self::none(),
@@ -45,20 +45,20 @@ impl<T: SimpleAtomic> From<Option<T::Value>> for AtomicOption<T> {
     }
 }
 
-impl<T: SimpleAtomic> AtomicOption<T> {
+impl<T: Atomizable> AtomicOption<T> {
     /// Creates a new atomic option with no value.
     pub fn none() -> Self {
         Self {
-            is_some: AtomicBool::new(false),
-            value: T::default(),
+            is_some: Atomic::from(false),
+            value: Atomic::default(),
         }
     }
 
     /// Creates a new atomic option with a value.
-    pub fn some(value: T::Value) -> Self {
+    pub fn some(value: T) -> Self {
         Self {
-            is_some: AtomicBool::new(true),
-            value: T::new(value),
+            is_some: Atomic::from(true),
+            value: Atomic::from(value),
         }
     }
 
@@ -73,7 +73,7 @@ impl<T: SimpleAtomic> AtomicOption<T> {
     }
 
     /// Loads the value with the given ordering.
-    pub fn load(&self, ordering: Ordering) -> Option<T::Value> {
+    pub fn load(&self, ordering: Ordering) -> Option<T> {
         if self.is_some(ordering) {
             Some(self.value.load(ordering))
         } else {
@@ -82,7 +82,7 @@ impl<T: SimpleAtomic> AtomicOption<T> {
     }
 
     /// Stores a value with the given ordering.
-    pub fn store(&self, value: Option<T::Value>, ordering: Ordering) {
+    pub fn store(&self, value: Option<T>, ordering: Ordering) {
         match value {
             Some(value) => {
                 // First store the value, then set the flag,
@@ -102,7 +102,7 @@ impl<T: SimpleAtomic> AtomicOption<T> {
     }
 
     /// Stores `Some` with the given ordering.
-    pub fn store_some(&self, value: T::Value, ordering: Ordering) {
+    pub fn store_some(&self, value: T, ordering: Ordering) {
         self.store(Some(value), ordering);
     }
 
@@ -110,34 +110,26 @@ impl<T: SimpleAtomic> AtomicOption<T> {
     /// 
     /// # Panics
     /// Panics if the option is `None`.
-    pub fn unwrap(&self, ordering: Ordering) -> T::Value {
+    pub fn unwrap(&self, ordering: Ordering) -> T {
         self.load(ordering).unwrap()
     }
 }
 
 #[cfg(test)]
+#[cfg(feature = "loom")]
 mod tests {
-    use alloc::vec::Vec;
-    use core::ops::{Add, AddAssign, Deref};
-    use log::{debug, info};
     use super::*;
-    use pretty_assertions::assert_eq;
-    use test_log::test;
-    use crate::option;
-    extern crate std;
-    #[cfg(feature = "default_core")]
-    use std::thread;
-    #[cfg(feature = "default_core")]
-    use std::sync::Arc;
-    #[cfg(feature = "default_loom")]
+    use alloc::vec::Vec;
+    use log::{debug, info};
     use loom::thread;
-    #[cfg(feature = "default_loom")]
-    use loom::sync::Arc;
+    use crate::option::AtomicOption;
+    
+    extern crate std;
+    use std::sync::atomic::AtomicU32;
     use std::sync::Arc as RealArc;
-    use std::sync::atomic::AtomicU32 as RealAtomicU32;
 
     fn test_atomic_option_sync(ordering: Ordering) {
-        let option: AtomicOption<AtomicI32> = AtomicOption::none();
+        let option: AtomicOption<i32> = AtomicOption::none();
 
         assert!(option.is_none(ordering.for_load()));
         assert!(!option.is_some(ordering.for_load()));
@@ -164,7 +156,7 @@ mod tests {
         };
 
         // Arc so that we don't have to deal with lifetimes.
-        let option: Arc<AtomicOption<AtomicI32>> = Arc::new(AtomicOption::none());
+        let option: Arc<AtomicOption<i32>> = Arc::new(AtomicOption::none());
 
         let mut threads = Vec::new();
 
@@ -211,21 +203,8 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "default_core")]
-    fn test_atomic_option_core_sync() {
-        test_atomic_option_sync(Ordering::Relaxed);
-    }
-
-    #[test]
-    #[cfg(feature = "default_core")]
-    fn test_atomic_option_core_async_acqrel() {
-        test_atomic_option_async(Ordering::AcqRel);
-    }
-
-    #[test]
-    #[cfg(feature = "default_loom")]
     fn test_atomic_option_loom_sync() {
-        let i = RealArc::new(RealAtomicU32::new(0));
+        let i = RealArc::new(AtomicU32::new(0));
         loom::model(move || {
             let i = i.fetch_add(1, Ordering::Relaxed) + 1;
             info!("Testing iteration {i}...");
@@ -235,9 +214,8 @@ mod tests {
 
     #[test]
     #[should_panic]
-    #[cfg(feature = "default_loom")]
     fn test_atomic_option_loom_async_relaxed() {
-        let i = RealArc::new(RealAtomicU32::new(0));
+        let i = RealArc::new(AtomicU32::new(0));
         loom::model(move || {
             let i = i.fetch_add(1, Ordering::Relaxed) + 1;
             info!("Testing iteration {i}...");
@@ -246,9 +224,8 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "default_loom")]
     fn test_atomic_option_loom_async_acqrel() {
-        let i = RealArc::new(RealAtomicU32::new(0));
+        let i = RealArc::new(AtomicU32::new(0));
         loom::model(move || {
             let i = i.fetch_add(1, Ordering::Relaxed) + 1;
             info!("Testing iteration {i}...");

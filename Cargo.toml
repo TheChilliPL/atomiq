@@ -11,13 +11,12 @@ repository = "https://github.com/TheChilliPL/atomiq"
 publish = ["crates-io"]
 
 [features]
-default = ["compat_core", "default_core"]
-compat_core = []
-compat_loom = ["dep:loom"]
-default_core = ["compat_core"]
-default_loom = ["compat_loom"]
+default = ["alloc"]
+alloc = []
+loom = ["dep:loom", "alloc"]
 
 [dependencies]
+cfg-if = "1.0.0"
 loom = { version = "0.7.2", optional = true }
 
 [dev-dependencies]
