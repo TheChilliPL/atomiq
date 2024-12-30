@@ -1,0 +1,7 @@
+error: Atomizable can only be derived for structs with a single field.
+ --> tests/fail-derive-empty.rs:3:10
+  |
+3 | #[derive(Atomizable)]
+  |          ^^^^^^^^^^
+  |
+  = note: this error originates in the derive macro `Atomizable` (in Nightly builds, run with -Z macro-backtrace for more info)

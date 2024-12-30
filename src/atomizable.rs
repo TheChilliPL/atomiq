@@ -38,18 +38,18 @@ impl<T: IntAtom> IntAtomizable for T {}
 /// Extension trait for converting values into atomic.
 /// 
 /// This trait is implemented for all types that implement `Atomizable`.
-pub trait Atomize {
+pub trait Atomize: Atomizable + Sized {
     /// The primitive representation of the type.
     type Atom: Atom;
 
     /// Converts the value into an atomic.
-    fn atomize(self) -> Atomic<Self::Atom>;
+    fn atomize(self) -> Atomic<Self>;
 }
 
 impl<T: Atomizable> Atomize for T {
     type Atom = T::Atom;
     
-    fn atomize(self) -> Atomic<Self::Atom> {
-        Atomic::from(self.pack())
+    fn atomize(self) -> Atomic<Self> {
+        Atomic::from(self)
     }
 }
