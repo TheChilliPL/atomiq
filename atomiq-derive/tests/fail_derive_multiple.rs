@@ -1,6 +1,8 @@
+#![cfg(not(clippy))]
+
 use atomiq_derive::Atomizable;
 
 #[derive(Atomizable)]
-struct TestStruct;
+struct TestStruct(i32, i32);
 
 fn main() {}

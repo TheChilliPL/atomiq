@@ -1,0 +1,5 @@
+error: Atomizable can only be derived for structs with a single field.
+ --> tests/fail_derive_multiple.rs:4:18
+  |
+4 | struct TestStruct(i32, i32);
+  |                  ^^^^^^^^^^

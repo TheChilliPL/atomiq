@@ -1,5 +1,5 @@
-error: Atomizable can only be derived for structs with a single field.
- --> tests/fail-derive-empty.rs:3:10
+error: Atomizable can only be derived for enums with an explicit repr attribute.
+ --> tests/fail_derive_enum_no_repr.rs:3:10
   |
 3 | #[derive(Atomizable)]
   |          ^^^^^^^^^^

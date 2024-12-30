@@ -1,5 +1,5 @@
 error: Atomizable can only be derived for structs with a single field.
- --> tests/fail-derive-multiple.rs:3:10
+ --> tests/fail_derive_empty.rs:3:10
   |
 3 | #[derive(Atomizable)]
   |          ^^^^^^^^^^

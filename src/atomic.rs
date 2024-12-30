@@ -12,7 +12,7 @@ impl<T: Atomizable> Default for Atomic<T> {
 
 impl<T: Atomizable> From<T> for Atomic<T> {
     fn from(value: T) -> Self {
-        Atomic(value.pack().into())
+        Atomic(<T::Atom as Atom>::Provider::from(value.pack()))
     }
 }
 
