@@ -10,17 +10,18 @@ Dates in this file are in `YYYY-MM-DD (HH:MM)` format in [Europe/Warsaw] timezon
 [Europe/Warsaw]: https://en.wikipedia.org/wiki/Europe/Warsaw
 [^1]: Standard Time: CET/UTC+1, Daylight Saving Time: CEST/UTC+2
 
-## [Unreleased] 0.2.0
+## [0.2.0] - 2024-12-30 23:01
 
 ### Added
 
-- [x] New `Atomic` struct that can be used as a drop-in replacement for
+- New `Atomic` struct that can be used as a drop-in replacement for
   `std::sync::atomic::Atomic*` types.
-- [x] New `Atomizable` trait that is implemented for all types that can be
+- New `Atomizable` trait that is implemented for all types that can be
   put into `Atomic`.
-- [x] New `Atom` trait that is implemented only for atomizable primitives.
-- [ ] Easy way to make simple structs atomizable.
-- [x] Public prelude for easier usage.
+- New `Atom` trait that is implemented only for atomizable primitives.
+- Easy way to make simple structs atomizable by using `#[derive(Atomizable)]`.
+- Public prelude for easier usage.
+- Exposing `Arc` if `alloc` feature is enabled.
 
 ### Changed
 

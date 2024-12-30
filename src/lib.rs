@@ -17,8 +17,6 @@
 #![no_std]
 #![allow(unused)]
 #![warn(missing_docs)]
-#![cfg(feature = "alloc")]
-extern crate alloc;
 
 pub mod option;
 pub mod prelude;
@@ -33,3 +31,11 @@ pub use atom::{Atom, BitAtom, IntAtom};
 pub use atomizable::{Atomizable, BitAtomizable, IntAtomizable, Atomize};
 pub use ordering::{Ordering, OrderingExt};
 pub use try_init_model::try_init_model;
+
+#[cfg(feature = "alloc")]
+extern crate alloc;
+#[cfg(feature = "alloc")]
+pub use atom::Arc;
+
+#[cfg(feature = "derive")]
+pub use atomiq_derive as derive;

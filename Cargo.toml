@@ -1,7 +1,8 @@
 [workspace]
-members = [".", "atomiq-derive"]
+members = [".", "derive"]
 
 [workspace.package]
+version = "0.2.0"
 categories = ["concurrency", "rust-patterns"]
 keywords = ["atomics", "concurrency", "lock-free", "threading", "no-std"]
 authors = ["Chilli <chilli@thechilli.dev>"]
@@ -13,7 +14,7 @@ publish = ["crates-io"]
 [package]
 name = "atomiq"
 description = "Convenient tool for atomics in Rust."
-version = "0.1.1"
+version.workspace = true
 categories.workspace = true
 keywords.workspace = true
 authors.workspace = true
@@ -23,7 +24,7 @@ repository.workspace = true
 publish.workspace = true
 
 [features]
-default = ["alloc"]
+default = ["alloc", "derive"]
 alloc = []
 loom = ["dep:loom", "alloc"]
 derive = ["dep:atomiq-derive"]
@@ -31,7 +32,7 @@ derive = ["dep:atomiq-derive"]
 [dependencies]
 cfg-if = "1.0.0"
 loom = { version = "0.7.2", optional = true }
-atomiq-derive = { path = "atomiq-derive", version = "~0.0.1", optional = true }
+atomiq-derive = { path = "derive", version = "=0.2.0", optional = true }
 
 [dev-dependencies]
 log = "0.4.22"
