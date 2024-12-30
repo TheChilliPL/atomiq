@@ -1,4 +1,9 @@
-![Maintenance](https://img.shields.io/badge/maintenance-experimental-blue.svg)
+![Maintenance](https://img.shields.io/badge/maintenance-experimental-blue.svg?style=for-the-badge)
+[![Crates.io version](https://img.shields.io/crates/v/atomiq?style=for-the-badge)](https://crates.io/crates/atomiq)
+[![Docs.rs](https://img.shields.io/docsrs/atomiq?style=for-the-badge)](https://docs.rs/atomiq)
+![Size](https://img.shields.io/crates/size/atomiq?style=for-the-badge)
+[![License](https://img.shields.io/github/license/TheChilliPL/atomiq?style=for-the-badge)](https://github.com/TheChilliPL/atomiq/blob/main/LICENSE)
+
 
 # atomiq
 
@@ -8,13 +13,10 @@ Inspired by the `atomig` crate, but with a more flexible design.
 
 ## Features
 
-- Common atomic traits and types.
-- Standard library/core implementation (default `compat-core` create feature)
-- [Loom][loom] implementation for testing (`compat-loom` crate feature)
-- Avoiding generics by providing default implementation (either `default-core` (default) or
-`default-loom` crate features)
-- Atomic option type (requires default implementation)
+- Common atomic struct `Atomic<T>`.
+- Traits like `Atomizable` with a derive macro for easy implementation.
+- Standard library/core implementation.
+- [Loom][loom] implementation for testing (`loom` crate feature).
+- Atomic option type.
 
 [loom]: https://docs.rs/loom
-
-License: MPL-2
