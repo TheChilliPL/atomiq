@@ -1,6 +1,8 @@
 //! Convenient tool for atomics in Rust.
 //!
 //! # Crate features
+//! `alloc` --- enables the `Arc` type. (default)
+//! `derive` --- enables the derive macros. (default)
 //! `loom` --- replaces the default implementation with the `loom` mock.
 //!
 //! # Usage
