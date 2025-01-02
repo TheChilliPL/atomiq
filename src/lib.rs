@@ -34,7 +34,7 @@ pub use atom::{Atom, BitAtom, IntAtom};
 pub use atomizable::{Atomizable, BitAtomizable, IntAtomizable, Atomize};
 pub use ordering::{Ordering, OrderingExt};
 pub use try_init_model::try_init_model;
-pub use cancellation_token::CancellationToken;
+pub use cancellation_token::*;
 
 #[cfg(feature = "alloc")]
 extern crate alloc;

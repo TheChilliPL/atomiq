@@ -6,7 +6,7 @@ pub use crate::{Ordering, OrderingExt};
 pub use crate::atomic::Atomic;
 pub use crate::atom::*;
 pub use crate::atomizable::{Atomizable, BitAtomizable, IntAtomizable, Atomize};
-pub use crate::CancellationToken;
+pub use crate::cancellation_token::*;
 
 #[cfg(feature = "derive")]
 pub use crate::derive::*;

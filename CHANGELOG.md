@@ -10,6 +10,12 @@ Dates in this file are in `YYYY-MM-DD (HH:MM)` format in [Europe/Warsaw] timezon
 [Europe/Warsaw]: https://en.wikipedia.org/wiki/Europe/Warsaw
 [^1]: Standard Time: CET/UTC+1, Daylight Saving Time: CEST/UTC+2
 
+## [Unreleased]
+
+### Added
+
+- `CancellationToken` type that can be used to cancel async operations.
+
 ## [0.2.1] - 2025-01-02 14:37
 
 ### Added
