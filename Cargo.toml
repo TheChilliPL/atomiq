@@ -2,7 +2,7 @@
 members = [".", "derive"]
 
 [workspace.package]
-version = "0.2.0"
+version = "0.2.1"
 categories = ["concurrency", "rust-patterns"]
 keywords = ["atomics", "concurrency", "lock-free", "threading", "no-std"]
 authors = ["Chilli <chilli@thechilli.dev>"]
@@ -32,7 +32,7 @@ derive = ["dep:atomiq-derive"]
 [dependencies]
 cfg-if = "1.0.0"
 loom = { version = "0.7.2", optional = true }
-atomiq-derive = { path = "derive", version = "=0.2.0", optional = true }
+atomiq-derive = { path = "derive", version = "=0.2.1", optional = true }
 
 [dev-dependencies]
 log = "0.4.22"

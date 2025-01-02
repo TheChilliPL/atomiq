@@ -27,12 +27,14 @@ mod atomic;
 mod atom;
 mod atomizable;
 mod try_init_model;
+mod cancellation_token;
 
 pub use atomic::Atomic;
 pub use atom::{Atom, BitAtom, IntAtom};
 pub use atomizable::{Atomizable, BitAtomizable, IntAtomizable, Atomize};
 pub use ordering::{Ordering, OrderingExt};
 pub use try_init_model::try_init_model;
+pub use cancellation_token::CancellationToken;
 
 #[cfg(feature = "alloc")]
 extern crate alloc;

@@ -10,6 +10,12 @@ Dates in this file are in `YYYY-MM-DD (HH:MM)` format in [Europe/Warsaw] timezon
 [Europe/Warsaw]: https://en.wikipedia.org/wiki/Europe/Warsaw
 [^1]: Standard Time: CET/UTC+1, Daylight Saving Time: CEST/UTC+2
 
+## [0.2.1] - 2025-01-02 14:37
+
+### Added
+
+- New `CancellationToken` struct that can be used to cancel async operations.
+
 ## [0.2.0] - 2024-12-30 23:01
 
 ### Added
@@ -30,9 +36,9 @@ Dates in this file are in `YYYY-MM-DD (HH:MM)` format in [Europe/Warsaw] timezon
 
 ### Removed
 
-- [x] Old `XAtomic` traits.
+- [x] Old `XAtomic` traits. [BREAKING]
 - [x] Support for multiple implementations at once in order to simplify the
-  codebase and usage.
+  codebase and usage. [BREAKING]
 
 ## [0.1.1] - 2024-12-28 14:20
 
@@ -58,6 +64,8 @@ Dates in this file are in `YYYY-MM-DD (HH:MM)` format in [Europe/Warsaw] timezon
 - Default implementation with `default-core` and `default-loom` crate features.
 - Atomic option type.
 
-[unreleased]: https://github.com/TheChilliPL/atomiq/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/TheChilliPL/atomiq/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/TheChilliPL/atomiq/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/TheChilliPL/atomiq/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/TheChilliPL/atomiq/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/TheChilliPL/atomiq/releases/tag/v0.1.0
